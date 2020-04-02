@@ -18,9 +18,8 @@ Vue.component('product', {
         <h1 >{{ title }}</h1>
         <p v-if="inStock">In Stock</p>
         <p v-else>Out of Stock</p>
-        <p>Shipping: {{ shipping }}</p>
 
-        <product-details :details="details"></product-details>
+        <details-product-tabs :shipping="shipping" :details="details"></details-product-tabs>
 
         <div class="color-box"
           v-for="(variant, index) in variants" 
@@ -149,8 +148,8 @@ Vue.component('product-review', {
 
       <p>
         <label for="recommend"> Would you recommend this product?</label>
-        <input id="recommend"  type="radio" :value="true"  v-model="recommend" selected>Yes
-        <input id="recommend"  type="radio" :value="false" v-model="recommend">No
+        <input type="radio" :value="true"  v-model="recommend" selected>Yes
+        <input type="radio" :value="false" v-model="recommend">No
       </p>
 
       <p>
@@ -186,6 +185,45 @@ Vue.component('product-review', {
         if (!this.rating) this.errors.push('Rating required');
         if (!this.review) this.errors.push('Review required');
       }
+    }
+  }
+});
+
+Vue.component('details-product-tabs', {
+  props: {
+    shipping: {
+      type: String,
+      required: true
+    },
+    details: {
+      type: Array,
+      required: true
+    }
+  },
+  template: `
+<div>
+  <span v-for="(productTab, index) in productTabs" 
+        :key="index"
+        :class="{ activeTab: selectedDetailsTab === productTab }"
+        @click="selectTab(productTab)">{{ productTab }}</span>
+
+  <p v-show="selectedDetailsTab === 'shipping'">Shipping: {{ shipping }}</p>
+
+  <product-details 
+      :details="details" 
+      v-show="selectedDetailsTab === 'Product details'">
+  </product-details>
+</div>
+  `,
+  data() {
+    return {
+      productTabs: [ 'shipping', 'Product details' ],
+      selectedDetailsTab: 'Product details'
+    };
+  },
+  methods: {
+    selectTab(productTab) {
+      this.selectedDetailsTab = productTab;
     }
   }
 });
