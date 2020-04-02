@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Product App</title>
+  <link rel="stylesheet" type="text/css"href="style.css">
+</head>
+<body>
+  <div class="nav-bar"></div> 
+  <div id="app">
+    <!-- Entre {{}} metemos nuestro data del main.js. A esta sintaxis de  dobles llaves se le llama EXPRESSION -->
+    <div class="product">
+
+      <div class="product-image">
+        <!-- v-bind: liga un atributo (:src :alt :href :title :class :style :disable, ...) a un expression entre "". La forma corta son solo los dos puntos (:)-->
+        <img v-bind:src="image">
+      </div>
+
+      <div class="product-info">
+        <h1 v-if="onSale">{{ title }}</h1>
+        <h1 v-else>No está en venta</h1>
+
+        <!-- <p :class="[!inStock ? 'outStock' : 'inStock']">In Stock</p> -->
+        <p v-if="inStock">In Stock</p>
+        <p v-else :class="{ outOfStock: !inStock }">Out of Stock</p>
+
+        <!-- <p v-if="inventory > 10">In Stock</p>
+        <p v-else-if="inventory <= 10 && inventory > 0">Almost sold!</p>
+        <p v-else>Out Stock</p> -->
+
+        <!-- v-show, hace un display: none en función de true or flase -->
+        <!-- <p v-show="onSale">All sold, sorry!</p> -->
+        <ul>
+          <!-- detail es cada elemento y details  es el array de main.js. Es util poner key -->
+          <li v-for="detail in details">{{ detail }}</li>
+        </ul>
+
+        <!-- :style="styleObject" // :style="color: red; font-size: 13px"
+              en main.js:
+              data: {
+                styleObject: {
+                  color: 'red',
+                  fontSize: '13px'
+                }
+              } -->
+        <!-- @mouseover="updateProduct(variant.variantImage)">
+          @ es el shorthand de v-on: -->
+        <div v-for="(variant, index) in variants" 
+              :key="variant.variantId"
+              class="color-box"
+              :style="{backgroundColor: variant.variantColor}"
+              @mouseover="updateProduct(index)">
+        </div>
+
+        <ul>
+          <li v-for="size in sizes" :key="size">{{ size }}</li>
+        </ul>
+      </div>
+      
+      <!-- <a :href="url" target="_blank">link</a> -->
+
+      <button v-on:click="addToCart" 
+              :disabled="!inStock"
+              :class="{ disabledButton: !inStock }">
+        Add to Cart
+      </button>
+
+      <div class="cart">
+        <p>Cart ({{ cart }})</p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>
